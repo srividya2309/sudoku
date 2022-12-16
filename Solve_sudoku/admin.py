@@ -10,3 +10,5 @@ class ResultAdmin(admin.ModelAdmin):
 
 
 admin.site.register(Result,ResultAdmin)
+
+
