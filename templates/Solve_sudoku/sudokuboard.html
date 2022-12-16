@@ -1,0 +1,247 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Sudoku</title>
+    <link rel="stylesheet" href="{% static 'css/style.css' %}" />
+
+    <script src="{% static 'js/sudoku.js' %}"></script>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script language="javascript" type="text/javascript">
+      $(document).ready(function () {
+        $("#generate").click(function () {
+          init();
+          generate();
+          countdwn();
+          $("#generate").hide();
+          $("#submit").show();
+          $(".main-container").css("display","flex")
+          fGrid = getFinishedGrid();
+        });
+        $(".mistakeScreen").click(function () {
+          $(".mistakeScreen").fadeOut(100);
+        });
+        $(".winScreen").click(function () {
+          $(".winScreen").fadeOut(100);
+        });
+        $("#submit").click(function () {
+          // $("#numPad").fadeOut(100);
+          end();
+          pause_clock();
+          fGrid = getFinishedGrid();
+          // console.log(fGrid);
+          solve();
+          sol = getFinishedGrid();
+          // console.log(fGrid);
+          for (var i = 0; i < 9; i++) {
+            for (var j = 0; j < 9; j++) {
+              if (fGrid[i][j] != sol[i][j]) {
+                console.log("wrong");
+                $(".mistakeScreen").fadeIn(100);
+                $("#result").val("wrong")
+                return;
+              }
+            }
+          }
+          $(".winScreen").fadeIn(100);
+          $("#result").val("Congratulations")
+          console.log("right");
+        });
+      });
+
+      //====Browser Refresh
+      // $(window).bind("beforeunload", function (e) {
+      //   return "Refreshing this page will log you out";
+      //   e.preventDefault();
+      // });
+
+      // var ctrlKeyDown = false;
+
+      // $(document).ready(function () {
+      //   $(document).on("keydown", keydown);
+      //   $(document).on("keyup", keyup);
+      // });
+
+      // function keydown(e) {
+      //   if (
+      //     (e.which || e.keyCode) == 116 ||
+      //     ((e.which || e.keyCode) == 82 && ctrlKeyDown)
+      //   ) {
+      //     // Pressing F5 or Ctrl+R
+      //     e.preventDefault();
+      //   } else if ((e.which || e.keyCode) == 17) {
+      //     // Pressing  only Ctrl
+      //     ctrlKeyDown = true;
+      //   }
+      // }
+
+      // function keyup(e) {
+      //   // Key up Ctrl
+      //   if ((e.which || e.keyCode) == 17) ctrlKeyDown = false;
+      // }
+
+      function end() {
+        document.getElementsByClassName("sudoku")[0].style.display = "none";
+        document.getElementsByClassName("main-container")[0].style.display =
+          "none";
+        document.getElementById("d").innerHTML = "Thank you!! ";
+        document.getElementById("submit").style.display = "none";
+        document.getElementById("time").style.display = "block";
+        document.getElementById("result").style.display = "block";
+      }
+
+      const semicircles = document.getElementsByClassName("semicircle");
+
+      var sec = 900;
+      var seconds = sec;
+
+      function countDownTImer() {
+        const currentTime = Date.now();
+        // const remainingTIme = futureTime - currentTime;
+        const angle = (sec / seconds) * 360;
+
+        if (angle > 180) {
+          semicircles[2].style.display = "none";
+          semicircles[0].style.transform = "rotate(180deg)";
+          semicircles[1].style.transform = `rotate(${angle}deg)`;
+        } else {
+          semicircles[2].style.display = "block";
+          // semicircles[2].style.display='none';
+          semicircles[0].style.transform = `rotate(${angle}deg)`;
+          semicircles[1].style.transform = `rotate(${angle}deg)`;
+        }
+
+        if (sec < 0) {
+          clearInterval(timerloop);
+          semicircles[0].style.display = "none";
+          semicircles[1].style.display = "none";
+          semicircles[2].style.display = "none";
+        }
+      }
+      var countDown;
+      var timeStamp;
+      // var sec = 600;
+      var trail;
+
+      function counter() {
+        countDiv = document.getElementById("timer");
+
+        var min = Math.floor(sec / 60),
+          remSec = sec % 60;
+        if (remSec < 10) {
+          remSec = "0" + remSec;
+        }
+        if (min < 10) {
+          min = "0" + min;
+        }
+
+        countDiv.innerHTML = min + ":" + remSec;
+        timeStamp = min + ":" + remSec;
+
+        //   console.log(min + ":" + remSec);
+        if (sec > 0) {
+          sec = sec - 1;
+        } else {
+          clearInterval(countDown);
+          countDiv.innerHTML = "countdown done";
+          end();
+          fGrid = getFinishedGrid();
+          solve();
+          pause_clock();
+          // console.log(fGrid);
+
+          sol = getFinishedGrid();
+          // console.log(fGrid);
+          for (var i = 0; i < 9; i++) {
+            for (var j = 0; j < 9; j++) {
+              if (fGrid[i][j] != sol[i][j]) {
+                console.log("wrong");
+                $(".mistakeScreen").fadeIn(100);
+                document.getElementById("result").value = "Wrong";
+
+                return;
+              }
+            }
+          }
+          $(".winScreen").fadeIn(100);
+          document.getElementById("result").value = "Congratulations";
+
+          console.log("right");
+        }
+        // console.log(sec);
+      }
+
+      function countdwn() {
+        countDown = setInterval(counter, 1000, sec);
+        timerloop = setInterval(countDownTImer, sec);
+      }
+
+      function pause_clock() {
+        clearInterval(countDown);
+
+        console.log(timeStamp);
+        document.getElementById("time").value = timeStamp;
+      }
+    </script>
+  </head>
+
+  <body>
+    <div class="mt-10" align="center">
+      <img src="{%static 'images/gvpce.jpg'%}" alt="" />
+    </div>
+    <div></div> 
+    <div class="mistakeScreen">
+      <center class="mistakeText">Wrong One</center>
+    </div>
+    <div class="winScreen">
+      <center class="winText">Congratulations</center>
+    </div>
+    <section>
+      <h1 class="text-4xl mt-8 tracking-widest uppercase font-mono">Sudoku</h1>
+    </section>
+    <section id="sudokuPuzzle">
+      <center>
+        <form id="frm" action="{%url 'Solve_sudoku:display'%}" method="POST">
+          {%csrf_token%} 
+          <div class="main-container center">
+            <div class="circle-container center">
+              <div class="semicircle"></div>
+              <div class="semicircle"></div>
+              <div class="semicircle"></div>
+              <div class="outermost-circle"></div>
+            </div>
+            <div id="timer"></div>
+          </div>
+          <div id="d" class="text-3xl tracking-widest mt-10"></div>
+          <!-- <div id="time"></div> -->
+          <!-- <div id="result"></div> -->
+          
+          <div class="grid ">
+            <table class="sudoku "></table>
+          </div>
+          <input type="text" id="" name="first_name" value="{{user.first_name}}" class="text-center w-bg-white text-xl hidden"/> <input type="text" id="" name="last_name" value="{{user.last_name}}" class="text-center bg-white text-xl hidden"/> <input type="text" id="" name="email" value="{{user.email}}" class="text-center bg-white text-xl hidden"/><br>
+          <input type="text" id="time" name="time" value="" class="text-center bg-white text-xl hidden"><input type="text" id="result" name="result" value="" class="text-center bg-white text-xl hidden"/>
+          <button
+            id="submit"
+            value="Submit"
+            type = "submit"
+            class="hidden  text-center hover:scale-110 tracking-widest bg-indigo-700 w-28 border-2 p-2 rounded-lg text-xl cursor-pointer hover:bg-green-700 duration-300 text-white"
+          >submit</button><br />
+        </form>
+        <div class="flex-wrap">
+          <input
+            type="button"
+            name="start"
+            id="generate"
+            value="Start"
+            class="w-28 tracking-widest bg-indigo-700 text-white hover:scale-110 text-xl border-2 rounded-lg cursor-pointer p-1.5 m-auto hover:bg-green-700 duration-300"
+          />
+        </div>
+      </center>
+      <center>
+      </center>
+    </section>
+  </body>
+</html>
