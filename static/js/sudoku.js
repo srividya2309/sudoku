@@ -103,7 +103,7 @@ function generate() {
   }
   createRandomSolution(bord);
   // console.log(bord);
-  removeFromBord(bord, 45);
+  removeFromBord(bord, 18);
   // console.log(trial);
 
   //adds bord to the html bord.
