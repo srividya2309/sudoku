@@ -161,6 +161,10 @@ function solve() {
       if (row.childNodes[j].childNodes[0].value == "") {
         bord[i].push(0);
       } 
+      // else {
+      //   var value = parseInt(row.childNodes[j].childNodes[0].value, 10);
+      //   bord[i].push(value);
+      // }
     }
   }
   if (isSolvable(bord) == 1) {
