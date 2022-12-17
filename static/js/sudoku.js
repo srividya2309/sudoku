@@ -160,11 +160,10 @@ function solve() {
     for (var j = 0; j < row.childNodes.length; j++) {
       if (row.childNodes[j].childNodes[0].value == "") {
         bord[i].push(0);
-      } 
-      // else {
-      //   var value = parseInt(row.childNodes[j].childNodes[0].value, 10);
-      //   bord[i].push(value);
-      // }
+      } else {
+        var value = parseInt(row.childNodes[j].childNodes[0].value, 10);
+        bord[i].push(value);
+      }
     }
   }
   if (isSolvable(bord) == 1) {
@@ -180,6 +179,7 @@ function solve() {
     }
   } else {
     console.log("could not solve sudoku");
+    return "False";
   }
   // trial = bord
   //  .log(bord);
