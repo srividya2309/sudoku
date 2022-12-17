@@ -32,9 +32,9 @@
           pause_clock();
           fGrid = getFinishedGrid();
           // console.log(fGrid);
-          solve();
+          s= solve()
           sol = getFinishedGrid();
-          // console.log(fGrid);
+          //console.log(s);
           for (var i = 0; i < 9; i++) {
             for (var j = 0; j < 9; j++) {
               if (fGrid[i][j] != sol[i][j]) {
@@ -45,9 +45,21 @@
               }
             }
           }
-          $(".winScreen").fadeIn(100);
-          $("#result").val("Congratulations")
-          console.log("right");
+          if(s!=="False"){
+
+            $(".winScreen").fadeIn(100);
+            $("#result").val("Congratulations")
+            console.log("right");
+          }
+          else{
+
+            console.log("wrong");
+                $(".mistakeScreen").fadeIn(100);
+                $("#result").val("wrong")
+                return;
+
+          }
+          
         });
       });
 
