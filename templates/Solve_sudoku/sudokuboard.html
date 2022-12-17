@@ -160,7 +160,7 @@
           countDiv.innerHTML = "countdown done";
           end();
           fGrid = getFinishedGrid();
-          solve();
+          s = solve();
           pause_clock();
           // console.log(fGrid);
 
@@ -177,10 +177,16 @@
               }
             }
           }
-          $(".winScreen").fadeIn(100);
-          document.getElementById("result").value = "Congratulations";
-
-          console.log("right");
+          if (s !== "False") {
+            $(".winScreen").fadeIn(100);
+            $("#result").val("Congratulations");
+            console.log("right");
+          } else {
+            console.log("wrong");
+            $(".mistakeScreen").fadeIn(100);
+            $("#result").val("wrong");
+            return;
+          }
         }
         // console.log(sec);
       }
